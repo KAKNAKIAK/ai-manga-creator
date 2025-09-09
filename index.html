@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Manga Creator</title>
+    <title>🎨 AI Manga Creator</title>
     <style>
         * {
             margin: 0;
@@ -145,6 +145,28 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* 반응형 디자인 개선 */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -156,20 +178,20 @@
             <textarea id="promptInput" placeholder="예: 용감한 히어로가 거대한 로봇과 도시에서 싸우는 장면"></textarea>
             
             <div class="button-group">
-                <button id="generateBtn">만화 생성</button>
-                <button id="clearBtn" class="clear-btn" style="display: none;">모두 지우기</button>
+                <button id="generateBtn">✨ 만화 생성하기</button>
+                <button id="clearBtn" class="clear-btn" style="display: none;">🗑️ 모두 지우기</button>
             </div>
         </div>
 
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p>AI가 만화를 생성하고 있습니다...</p>
+            <p>🤖 AI가 만화를 생성하고 있습니다...</p>
         </div>
 
         <div id="panels"></div>
         
         <div class="empty-state" id="emptyState">
-            <p>아직 생성된 만화가 없습니다. 위에서 장면을 설명하고 생성 버튼을 눌러보세요!</p>
+            <p>🎭 아직 생성된 만화가 없습니다.<br>위에서 장면을 설명하고 생성 버튼을 눌러보세요!</p>
         </div>
     </div>
 
@@ -188,9 +210,13 @@
         
         function generateManga() {
             const prompt = promptInput.value.trim();
-            if (!prompt) return;
+            if (!prompt) {
+                alert('만화 장면을 설명해주세요! 🎨');
+                return;
+            }
             
             generateBtn.disabled = true;
+            generateBtn.textContent = '생성 중...';
             loading.style.display = 'block';
             emptyState.style.display = 'none';
             
@@ -208,16 +234,19 @@
                 promptInput.value = '';
                 
                 generateBtn.disabled = false;
+                generateBtn.textContent = '✨ 만화 생성하기';
                 loading.style.display = 'none';
                 clearBtn.style.display = mangaPanels.length > 0 ? 'inline-block' : 'none';
             }, 2000);
         }
         
         function clearPanels() {
-            mangaPanels = [];
-            renderPanels();
-            clearBtn.style.display = 'none';
-            emptyState.style.display = 'block';
+            if (confirm('정말로 모든 만화 패널을 삭제하시겠습니까? 🗑️')) {
+                mangaPanels = [];
+                renderPanels();
+                clearBtn.style.display = 'none';
+                emptyState.style.display = 'block';
+            }
         }
         
         function renderPanels() {
@@ -230,12 +259,12 @@
             emptyState.style.display = 'none';
             
             const panelsHTML = `
-                <h2>생성된 만화 패널들</h2>
+                <h2>🎭 생성된 만화 패널들 (${mangaPanels.length}개)</h2>
                 <div class="image-grid">
                     ${mangaPanels.map(panel => `
                         <div class="image-card">
                             <img src="${panel.imageUrl}" alt="${panel.description}" loading="lazy">
-                            <div class="image-text">${panel.prompt}</div>
+                            <div class="image-text">"${panel.prompt}"</div>
                         </div>
                     `).join('')}
                 </div>
@@ -251,6 +280,10 @@
                 generateManga();
             }
         });
+
+        // 페이지 로드 시 환영 메시지
+        console.log('🎨 AI Manga Creator가 성공적으로 로드되었습니다!');
+        console.log('📱 모바일과 데스크톱에서 모두 사용 가능합니다.');
     </script>
 </body>
 </html>
